@@ -21,18 +21,22 @@ public class VigenereCipher implements Cipher {
     }
 
     private String process(String message, String key, boolean encryptMode) {
-        String result = "";
-        key = key.toUpperCase();
 
+        key = key.trim().toUpperCase();
+
+        // Build reversed repeated key
+        String builtKey = buildKey(message, key);
+
+        String result = "";
         int keyIndex = 0;
 
         for (int i = 0; i < message.length(); i++) {
+
             char ch = message.charAt(i);
 
             if (Character.isLetter(ch)) {
 
                 char upperChar = Character.toUpperCase(ch);
-
                 char keyChar = key.charAt(keyIndex % key.length());
 
                 int messageVal = upperChar - 'A';
@@ -51,31 +55,63 @@ public class VigenereCipher implements Cipher {
                 keyIndex++;
 
             } else {
-                result += ch;   // keep non-letters unchanged
+                result += ch;
             }
         }
 
-        return result.toUpperCase();
+        return result;
+    }
+
+    // Build reversed repeated key
+    private String buildKey(String message, String key) {
+
+        String repeatedKey = "";
+        int keyIndex = 0;
+
+        for (int i = 0; i < message.length(); i++) {
+
+            if (Character.isLetter(message.charAt(i))) {
+
+                repeatedKey += key.charAt(keyIndex % key.length());
+                keyIndex++;
+            }
+        }
+
+        // Reverse the key
+        String reversedKey = new StringBuilder(repeatedKey).reverse().toString();
+
+        return reversedKey;
     }
 
     private String readFile(String filename) {
+
         String content = "";
+
         try {
+
             Scanner scanner = new Scanner(new File(filename));
+
             while (scanner.hasNextLine()) {
+
                 content += scanner.nextLine();
+
                 if (scanner.hasNextLine()) {
                     content += "\n";
                 }
             }
+
             scanner.close();
+
         } catch (FileNotFoundException e) {
+
             System.out.println("File not found: " + filename);
         }
+
         return content;
     }
 
     public static void main(String[] args) {
+
         VigenereCipher vc = new VigenereCipher();
 
         System.out.println("Encrypted:");
