@@ -1,4 +1,3 @@
-// VigenereCipher.java
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -7,27 +6,15 @@ public class VigenereCipher implements Cipher {
 
     @Override
     public String encrypt(String messageFile, String keyFile) {
-
         String message = readFile(messageFile);
         String key = readFile(keyFile);
-
         return process(message, key, true);
     }
 
     @Override
     public String decrypt(String messageFile, String keyFile) {
-
         String message = readFile(messageFile);
         String key = readFile(keyFile);
-
-        System.out.println("\n===== DECRYPTION PROCESS =====\n");
-
-        System.out.println("Ciphertext:");
-        System.out.println(message);
-
-        System.out.println("\nKey:");
-        System.out.println(key);
-
         return process(message, key, false);
     }
 
@@ -35,24 +22,14 @@ public class VigenereCipher implements Cipher {
 
         key = key.replaceAll("[^A-Za-z]", "").toUpperCase();
 
-// Step 1: repeat key first
-String repeatedKey = buildRepeatedKey(message, key);
+        // Step 1: repeat key based on number of letters in message
+        String repeatedKey = buildRepeatedKey(message, key);
 
-System.out.println("\nRepeated Key:");
-System.out.println(repeatedKey);
-
-// Step 2: reverse the repeated key
-String reversedKey = new StringBuilder(repeatedKey).reverse().toString();
-
-System.out.println("\nReversed Repeated Key:");
-System.out.println(reversedKey);
-
-    
+        // Step 2: reverse the repeated key
+        String reversedKey = new StringBuilder(repeatedKey).reverse().toString();
 
         StringBuilder result = new StringBuilder();
         int keyIndex = 0;
-
-        System.out.println("\nStep-by-Step Process:");
 
         for (int i = 0; i < message.length(); i++) {
 
@@ -76,27 +53,14 @@ System.out.println(reversedKey);
 
                 char resultChar = (char) (newVal + 'A');
 
-                String op = encryptMode ? "+" : "-";
-
-                System.out.println(
-                        messageChar + " (" + messageVal + ") "
-                                + op + " "
-                                + keyChar + " (" + keyVal + ") -> "
-                                + resultChar
-                );
-
                 result.append(resultChar);
                 keyIndex++;
 
             } else {
 
-                System.out.println(ch + " -> unchanged");
                 result.append(ch);
             }
         }
-
-        System.out.println("\nFinal Result:");
-        System.out.println(result.toString());
 
         return result.toString();
     }
@@ -109,7 +73,6 @@ System.out.println(reversedKey);
         for (int i = 0; i < message.length(); i++) {
 
             if (Character.isLetter(message.charAt(i))) {
-
                 repeatedKey.append(key.charAt(keyIndex % key.length()));
                 keyIndex++;
             }
@@ -149,7 +112,7 @@ System.out.println(reversedKey);
 
         VigenereCipher vc = new VigenereCipher();
 
-        vc.encrypt("encrypt_check.txt", "key_check.txt");
-        vc.decrypt("decrypt_check.txt", "key_check.txt");
+        System.out.println(vc.encrypt("encrypt_check.txt", "key_check.txt"));
+        System.out.println(vc.decrypt("decrypt_check.txt", "key_check.txt"));
     }
 }
