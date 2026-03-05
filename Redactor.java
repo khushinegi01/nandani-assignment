@@ -1,5 +1,3 @@
-public class Redactor {
-
     public static String redact(String text, String[] redactableWords) {
         String result = "";
         String currentWord = "";
@@ -68,13 +66,6 @@ public class Redactor {
         }
         return lower;
     }
-    public static void main(String[] args) {
-        String text = "The quick brown fox jumps over the lazy DOG!";
-        String[] words = {"Fox", "jumps", "dog"};
 
-        String result = Redactor.redact(text, words);
-        System.out.println(result);
-    }
-}
 
 
