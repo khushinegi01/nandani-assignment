@@ -1,75 +1,78 @@
-public class Redactor {
+public static String redact(String text, String[] redactableWords) {
 
-    public static String redact(String text, String[] redactableWords) {
-        String result = "";
-        String currentWord = "";
+    String result = "";
+    String currentWord = "";
 
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
+    for (int i = 0; i < text.length(); i++) {
 
-            // If letter, build the word
-            if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
-                currentWord += ch;
-            } else {
-                // Word ended, check if it should be redacted
-                if (currentWord.length() > 0) {
-                    if (shouldRedact(currentWord, redactableWords)) {
-                        result += hashWord(currentWord.length());
-                    } else {
-                        result += currentWord;
+        char ch = text.charAt(i);
+
+        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
+
+            currentWord += ch;
+
+        } else {
+
+            if (currentWord.length() > 0) {
+
+                boolean redact = false;
+
+                String lowerWord = currentWord.toLowerCase();
+
+                for (int j = 0; j < redactableWords.length; j++) {
+
+                    if (lowerWord.equals(redactableWords[j].toLowerCase())) {
+                        redact = true;
+                        break;
                     }
-                    currentWord = "";
                 }
-                // Add non-letter character unchanged
-                result += ch;
+
+                if (redact) {
+
+                    for (int k = 0; k < currentWord.length(); k++) {
+                        result += "#";
+                    }
+
+                } else {
+
+                    result += currentWord;
+
+                }
+
+                currentWord = "";
+            }
+
+            result += ch;
+        }
+    }
+
+    if (currentWord.length() > 0) {
+
+        boolean redact = false;
+
+        String lowerWord = currentWord.toLowerCase();
+
+        for (int j = 0; j < redactableWords.length; j++) {
+
+            if (lowerWord.equals(redactableWords[j].toLowerCase())) {
+                redact = true;
+                break;
             }
         }
 
-        // Check last word (if text ends with a letter)
-        if (currentWord.length() > 0) {
-            if (shouldRedact(currentWord, redactableWords)) {
-                result += hashWord(currentWord.length());
-            } else {
-                result += currentWord;
+        if (redact) {
+
+            for (int k = 0; k < currentWord.length(); k++) {
+                result += "#";
             }
-        }
 
-        return result;
+        } else {
+
+            result += currentWord;
+
+        }
     }
 
-    private static boolean shouldRedact(String word, String[] redactableWords) {
-        String lowerWord = toLowerCase(word);
-
-        for (int i = 0; i < redactableWords.length; i++) {
-            if (lowerWord.equals(toLowerCase(redactableWords[i]))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static String hashWord(int length) {
-        String hashes = "";
-        for (int i = 0; i < length; i++) {
-            hashes += "#";
-        }
-        return hashes;
-    }
-
-    private static String toLowerCase(String str) {
-        String lower = "";
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-            if (ch >= 'A' && ch <= 'Z') {
-                lower += (char)(ch + 32);
-            } else {
-                lower += ch;
-            }
-        }
-        return lower;
-    }
-
-} 
-
-
-
+    return result;
+       
+}
