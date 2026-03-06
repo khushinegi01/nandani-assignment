@@ -26,6 +26,7 @@ public class CustomSort implements SortingInterface {
     public void remove(int index) {
         if(index >= 0 && index < values.size()) {
             values.remove(index);
+            sort();
         }
     }
 
@@ -43,7 +44,7 @@ public class CustomSort implements SortingInterface {
 
         while (gap < n) {
             temp.add(gap);
-            gap = (int)Math.pow(2, i) - 1;
+            gap = (2 * gap) + 1;
             i++;
         }
 
