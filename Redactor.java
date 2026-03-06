@@ -1,3 +1,5 @@
+public class Redactor {
+
     public static String redact(String text, String[] redactableWords) {
         String result = "";
         String currentWord = "";
@@ -66,6 +68,8 @@
         }
         return lower;
     }
+
+} 
 
 
 
